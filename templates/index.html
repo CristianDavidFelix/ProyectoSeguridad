@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoreo de Ataques</title>
+</head>
+<body>
+    <h1>Eventos de Ataques Detectados</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>IP Origen</th>
+                <th>IP Destino</th>
+                <th>Puerto Origen</th>
+                <th>Puerto Destino</th>
+                <th>Tipo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                <td>{{ row['timestamp'] }}</td>
+                <td>{{ row['src_ip'] }}</td>
+                <td>{{ row['dst_ip'] }}</td>
+                <td>{{ row['src_port'] }}</td>
+                <td>{{ row['dst_port'] }}</td>
+                <td>{{ row['type'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
