@@ -3,12 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitoreo en Tiempo Real</title>
+    <title>Monitoreo de Tráfico en Tiempo Real</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #2c3e50;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .timestamp {
+            font-family: monospace;
+        }
+    </style>
 </head>
 <body>
     <h1>Monitoreo de Tráfico en Tiempo Real</h1>
-    <table id="packetsTable" border="1">
+    <table id="packetsTable">
         <thead>
             <tr>
                 <th>Timestamp</th>
@@ -31,17 +64,20 @@
         socket.on('update_table', function(packets) {
             const tbody = document.getElementById('tableBody');
             
+            // Limpiar la tabla antes de agregar nuevos datos
+            tbody.innerHTML = '';
+
             packets.forEach(packet => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${packet.timestamp}</td>
+                    <td class="timestamp">${packet.timestamp}</td>
                     <td>${packet.src_ip}</td>
                     <td>${packet.dst_ip}</td>
                     <td>${packet.src_port}</td>
                     <td>${packet.dst_port}</td>
                     <td>${packet.type}</td>
                 `;
-                tbody.insertBefore(row, tbody.firstChild);  // Insertar al inicio
+                tbody.appendChild(row);
             });
         });
     </script>
