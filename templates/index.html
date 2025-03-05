@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitoreo de Ataques</title>
+    <title>Monitoreo en Tiempo Real</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
 </head>
 <body>
-    <h1>Eventos de Ataques Detectados</h1>
-    <table border="1">
+    <h1>Monitoreo de Tráfico en Tiempo Real</h1>
+    <table id="packetsTable" border="1">
         <thead>
             <tr>
                 <th>Timestamp</th>
@@ -18,18 +19,31 @@
                 <th>Tipo</th>
             </tr>
         </thead>
-        <tbody>
-            {% for row in data %}
-            <tr>
-                <td>{{ row['timestamp'] }}</td>
-                <td>{{ row['src_ip'] }}</td>
-                <td>{{ row['dst_ip'] }}</td>
-                <td>{{ row['src_port'] }}</td>
-                <td>{{ row['dst_port'] }}</td>
-                <td>{{ row['type'] }}</td>
-            </tr>
-            {% endfor %}
+        <tbody id="tableBody">
+            <!-- Los datos se insertarán aquí dinámicamente -->
         </tbody>
     </table>
+
+    <script>
+        const socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        // Escuchar eventos de actualización del servidor
+        socket.on('update_table', function(packets) {
+            const tbody = document.getElementById('tableBody');
+            
+            packets.forEach(packet => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${packet.timestamp}</td>
+                    <td>${packet.src_ip}</td>
+                    <td>${packet.dst_ip}</td>
+                    <td>${packet.src_port}</td>
+                    <td>${packet.dst_port}</td>
+                    <td>${packet.type}</td>
+                `;
+                tbody.insertBefore(row, tbody.firstChild);  // Insertar al inicio
+            });
+        });
+    </script>
 </body>
 </html>
